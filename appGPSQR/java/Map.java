@@ -1,5 +1,6 @@
 package com.npi.appgpsqr;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,12 +30,18 @@ import java.util.concurrent.TimeUnit;
 public class Map extends AppCompatActivity {
     GoogleMap mMap;
     GoogleApiClient apiClient;
+    private LatLng destino = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         setUpMapIfNeeded();
+
+        Intent intent = getIntent();
+        Bundle b = intent.getBundleExtra(QR.EXTRA_BUNDLE);
+        destino = new LatLng(b.getFloat("Latitud"), b.getFloat("Longitud"));
+        setMarker(destino,"Destino");
     }
 
     private void setUpMapIfNeeded() {
@@ -56,20 +63,26 @@ public class Map extends AppCompatActivity {
                         PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},2);
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},2);
-
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            "Permisos inválidos", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Permisos inválidos", Toast.LENGTH_SHORT);
                     toast.show();
                 }
                 else{
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            "Permisos válidos", Toast.LENGTH_SHORT);
+                    //mMap.setMyLocationEnabled(true);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Permisos válidos", Toast.LENGTH_SHORT);
                     toast.show();
-                   // mMap.setMyLocationEnabled(true);
                 }
                 mMap.setMyLocationEnabled(true);
-
             }
         }
     }
+
+    private void setMarker(LatLng position, String titulo) {
+        // Agregamos marcadores para indicar sitios de interés.
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                .position(position)
+                .title(titulo));  //Agrega un titulo al marcador
+    }
+
+
+
 }
