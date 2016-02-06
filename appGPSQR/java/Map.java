@@ -1,48 +1,33 @@
 package com.npi.appgpsqr;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
-
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import android.support.v4.app.FragmentActivity;
-import com.google.android.gms.location.LocationServices;
-import java.util.Vector;
+
+import java.text.DateFormat;
+import java.util.Date;
+
 
 public class Map extends AppCompatActivity
-        implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
+        implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener{
     GoogleMap mMap;
     GoogleApiClient apiClient;
     private LatLng destino = null;
@@ -51,7 +36,8 @@ public class Map extends AppCompatActivity
     LocationRequest mLocationRequest;
     String mLastUpdateTime;
 
-    private Vector<LatLng> path_locations;
+    private PolylineOptions path_locations;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +60,7 @@ public class Map extends AppCompatActivity
         setMarker(destino, "Destino", lat, lon);
 
         createLocationRequest();
-
+        path_locations = new PolylineOptions();
     }
 
     private void setUpMapIfNeeded() {
@@ -100,7 +86,6 @@ public class Map extends AppCompatActivity
                     toast.show();*/
                 }
                 else{
-                    //mMap.setMyLocationEnabled(true);
                     Toast toast = Toast.makeText(getApplicationContext(), "Permisos válidos", Toast.LENGTH_SHORT);
                     toast.show();
                 }
@@ -144,7 +129,7 @@ public class Map extends AppCompatActivity
                 PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {}
         LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, (com.google.android.gms.location.LocationListener) this);
+                mGoogleApiClient, mLocationRequest, this);
     }
 
     @Override
@@ -158,7 +143,6 @@ public class Map extends AppCompatActivity
             LatLng latlng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latlng, 17);
             mMap.animateCamera(cameraUpdate);
-            path_locations = new Vector<LatLng>();
             path_locations.add(latlng);
         }
         else {
@@ -186,20 +170,13 @@ public class Map extends AppCompatActivity
 
         LatLng latlng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         path_locations.add(latlng);
+
+        if( Math.abs(mLastLocation.getLatitude()-destino.latitude) < 0.001 &&
+                Math.abs(mLastLocation.getLongitude()-destino.longitude) < 0.001){
+            mMap.addPolyline(path_locations);
+            Toast toast = Toast.makeText(getApplicationContext(), "Ha llegado a su destino", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
 }
