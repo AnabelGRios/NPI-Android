@@ -1,15 +1,9 @@
 package com.npi.appgestosfoto;
 
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.gesture.Gesture;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
@@ -17,7 +11,6 @@ import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.gesture.Prediction;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 
 public class Gesto extends AppCompatActivity implements OnGesturePerformedListener {
@@ -48,7 +41,13 @@ public class Gesto extends AppCompatActivity implements OnGesturePerformedListen
         for (Prediction prediction : predictions) {
             if (prediction.score > 1.0) {
                 Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+
+                if(prediction.name.equals("camera")){
+                    Intent intent = new Intent(this, Foto.class);
+                    startActivity(intent);
+                }
             }
         }
     }
+
 }
