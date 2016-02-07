@@ -78,10 +78,8 @@ public class Map extends AppCompatActivity
 
                 //Activamos la capa o layer MyLocation
                 if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) !=
-                        PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) !=
                         PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},2);
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},2);
                    /* Toast toast = Toast.makeText(getApplicationContext(), "Permisos inválidos", Toast.LENGTH_SHORT);
                     toast.show();*/
                 }
@@ -126,7 +124,6 @@ public class Map extends AppCompatActivity
 
     protected void startLocationUpdates() {
         if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {}
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
@@ -143,7 +140,6 @@ public class Map extends AppCompatActivity
             LatLng latlng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latlng, 17);
             mMap.animateCamera(cameraUpdate);
-            path_locations.add(latlng);
         }
         else {
             Toast toast = Toast.makeText(getApplicationContext(), "Posición nula", Toast.LENGTH_SHORT);
@@ -171,8 +167,8 @@ public class Map extends AppCompatActivity
         LatLng latlng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         path_locations.add(latlng);
 
-        if( Math.abs(mLastLocation.getLatitude()-destino.latitude) < 0.001 &&
-                Math.abs(mLastLocation.getLongitude()-destino.longitude) < 0.001){
+        if( Math.abs(mLastLocation.getLatitude()-destino.latitude) < 0.0001 &&
+                Math.abs(mLastLocation.getLongitude()-destino.longitude) < 0.0001){
             mMap.addPolyline(path_locations);
             Toast toast = Toast.makeText(getApplicationContext(), "Ha llegado a su destino", Toast.LENGTH_SHORT);
             toast.show();
