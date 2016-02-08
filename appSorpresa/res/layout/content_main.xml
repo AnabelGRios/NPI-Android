@@ -9,6 +9,12 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main" tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/receivedtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/codedtext"/>
+
     <EditText
         android:id="@+id/textout"
         android:layout_width="match_parent"
@@ -19,7 +25,7 @@
         android:layout_marginTop="129dp" />
 
     <TextView
-        android:id="@+id/receivedtext"
+        android:id="@+id/codedtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textout"/>
