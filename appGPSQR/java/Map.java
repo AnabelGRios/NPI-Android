@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -30,11 +31,12 @@ public class Map extends AppCompatActivity
         implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener{
     GoogleMap mMap;
     GoogleApiClient apiClient;
-    private LatLng destino = null;
+    private ArrayList<LatLong> destinys;
     private GoogleApiClient mGoogleApiClient;
     Location mLastLocation = null;
     LocationRequest mLocationRequest;
     String mLastUpdateTime;
+    int actual_destiny = 0;
 
     private PolylineOptions path_locations;
 
@@ -54,13 +56,20 @@ public class Map extends AppCompatActivity
         setUpMapIfNeeded();
         Intent intent = getIntent();
         Bundle b = intent.getBundleExtra(QR.EXTRA_BUNDLE);
-        destino = new LatLng(b.getFloat("Latitud"), b.getFloat("Longitud"));
-        String lat = Float.toString(b.getFloat("Latitud"));
-        String lon = Float.toString(b.getFloat("Longitud"));
-        setMarker(destino, "Destino", lat, lon);
+        destinys = b.getParcelableArrayList("Coordinates");
+
+        setDestiny(0);
 
         createLocationRequest();
         path_locations = new PolylineOptions();
+    }
+
+    private void setDestiny(int destiny){
+        float lat = destinys.get(destiny).lat;
+        float lng = destinys.get(destiny).lng;
+
+        LatLng latlng = new LatLng(lat,lng);
+        setMarker(latlng, "Destino", Float.toString(lat), Float.toString(lng));
     }
 
     private void setUpMapIfNeeded() {
@@ -167,12 +176,24 @@ public class Map extends AppCompatActivity
         LatLng latlng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         path_locations.add(latlng);
 
-        if( Math.abs(mLastLocation.getLatitude()-destino.latitude) < 0.0001 &&
-                Math.abs(mLastLocation.getLongitude()-destino.longitude) < 0.0001){
-            mMap.addPolyline(path_locations);
-            Toast toast = Toast.makeText(getApplicationContext(), "Ha llegado a su destino", Toast.LENGTH_SHORT);
-            toast.show();
+        if( Math.abs(mLastLocation.getLatitude()-destinys.get(actual_destiny).lat) < 0.0001 &&
+                Math.abs(mLastLocation.getLongitude()-destinys.get(actual_destiny).lng) < 0.0001){
+            if(actual_destiny == destinys.size()-1){
+                mMap.addPolyline(path_locations);
+                Toast toast = Toast.makeText(getApplicationContext(), "Ha llegado a su destino", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            else{
+                actual_destiny++;
+                setDestiny(actual_destiny);
+                Toast toast = Toast.makeText(getApplicationContext(), "Ha llegado a un punto de su destino", Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }
+    }
+
+    public void end(){
+
     }
 
 }
