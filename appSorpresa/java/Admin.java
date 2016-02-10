@@ -9,10 +9,7 @@ import android.nfc.NfcEvent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +17,31 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+/*  This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    See <http://www.gnu.org/licenses/> for a copy of the GNU General
+    Public License.
+    Autores: Jacinto Carrasco Castillo, Anabel Gómez Ríos.
+    Fecha de la última modificación: 10/02/2016.
+ */
+
+/* Los líneas generales para la transmisión a través de NFC están obtenidos de las guías de
+   la API de android: http://developer.android.com/intl/es/guide/topics/connectivity/nfc/index.html
+   y http://developer.android.com/intl/es/guide/topics/connectivity/nfc/nfc.html y del tutorial
+   presente en la web http://android-er.blogspot.com.es/2014/04/communication-between-android-using-nfc.html.
+   Así mismo, los métodos para codificar y decodificar mensajes en base 64 hemos conseguido que
+   funcionen gracias a http://www.iteramos.com/pregunta/48153/en-base-64-codificar-y-decodificar-un-codigo-de-ejemplo.
+   Las modificaciones y extensiones de estas guías son nuestras.
+ */
+
+/* Esta clase controla la interfaz y las opciones que tiene un administrador: poder
+   codificar y decodificar un mensaje.
+ */
 
 public class Admin extends AppCompatActivity implements View.OnClickListener,
         NfcAdapter.CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback {

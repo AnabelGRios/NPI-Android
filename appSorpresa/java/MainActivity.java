@@ -8,6 +8,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+/*  This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    See <http://www.gnu.org/licenses/> for a copy of the GNU General
+    Public License.
+    Autores: Jacinto Carrasco Castillo, Anabel Gómez Ríos.
+    Fecha de la última modificación: 10/02/2016.
+ */
 
 /*
  * Clase en la que introduciremos la contraseña y estableceremos el rol a seguir
@@ -18,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean is_registered = false;
 
     // Contraseña que debe introducirse
-    private String password = "password";
+    private String password = "NPI1415";
 
     // EditText donde introduciremos la contraseña
     private EditText editText;
@@ -52,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Se responde al evento click
     @Override
     public void onClick(View v) {
+        // Mandamos si se ha registrado como admin o no a las otras dos clases.
         if(v.getId()==R.id.omit_button){
             Intent intent = new Intent(this, Player.class);
             is_registered = false;
