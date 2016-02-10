@@ -94,13 +94,13 @@ public class Brujula extends AppCompatActivity implements SensorEventListener {
         String cardinal_point = b.getString("Point");
         tolerance = b.getFloat("Tolerance");
 
-        if(cardinal_point.equals(R.string.norte))
+        if(cardinal_point.equals("norte"))
             objective = 0f;
-        else if (cardinal_point.equals(R.string.sur))
+        else if (cardinal_point.equals("sur"))
             objective = 180f;
-        else if (cardinal_point.equals(R.string.oeste))
+        else if (cardinal_point.equals("oeste"))
             objective = -90f;
-        else if (cardinal_point.equals(R.string.este))
+        else if (cardinal_point.equals("este"))
             objective = 90f;
 
         // Mostramos por pantalla el objetivo al que le vamos a llevar y con qué tolerancia

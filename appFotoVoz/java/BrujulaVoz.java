@@ -142,10 +142,10 @@ public class BrujulaVoz extends AppCompatActivity{
                         tolerance = -1;
                     }
                     finally {
-                        if ((cardinal_point.equals(R.string.norte) ||
-                                cardinal_point.equals(R.string.sur) ||
-                                cardinal_point.equals(R.string.este) ||
-                                cardinal_point.equals(R.string.oeste)) && tolerance != -1) {
+                        if ((cardinal_point.equals("norte") ||
+                                cardinal_point.equals("sur") ||
+                                cardinal_point.equals("este") ||
+                                cardinal_point.equals("oeste")) && tolerance != -1) {
                             found = true;
                         }
                         else {
