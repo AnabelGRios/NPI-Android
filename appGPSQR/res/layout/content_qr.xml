@@ -12,8 +12,11 @@
     <Button
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="Scan"
-        android:id="@+id/scan_button">
+        android:text="@string/new_qr_button"
+        android:id="@+id/scan_button"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="109dp">
     </Button>
 
     <TextView
@@ -29,4 +32,22 @@
         android:id="@+id/scan_content"
         android:layout_below="@id/scan_format">
     </TextView>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/coord_numbers"
+        android:layout_below="@id/scan_content">
+    </TextView>
+
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/navigate_button"
+        android:id="@+id/navigation_button"
+        android:layout_marginTop="98dp"
+        android:layout_below="@+id/coord_numbers"
+        android:layout_alignRight="@+id/scan_button"
+        android:layout_alignEnd="@+id/scan_button">
+    </Button>
 </RelativeLayout>
