@@ -7,33 +7,34 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_main" tools:context=".MainActivity">
+    tools:showIn="@layout/activity_admin" tools:context="com.npi.appsorpresa.Admin">
 
-    <EditText android:text="@string/password" android:layout_width="fill_parent"
+    <TextView android:text="@string/text_decoded_msg" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/decoded_text"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="190dp"
-        android:id="@+id/editText" />
+        android:layout_marginTop="74dp" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <EditText android:text="@string/enter_text_msg"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/enter"
-        android:id="@+id/enter_button"
-        android:layout_marginBottom="82dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/editCodingText"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/omit"
-        android:id="@+id/omit_button"
-        android:layout_alignBottom="@+id/enter_button"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:id="@+id/codeBtn"
+        android:layout_below="@+id/editCodingText"
+        android:layout_centerHorizontal="true" />
 
-
+    <TextView android:text="@string/coded_msg" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/coded_text"
+        android:layout_below="@+id/codeBtn"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
