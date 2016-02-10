@@ -1,34 +1,19 @@
 package com.npi.appgestosfoto;
 
 import android.content.Context;
-import android.graphics.ImageFormat;
-import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
-import android.graphics.PixelFormat;
-import android.nfc.Tag;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.Size;
-import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.TextureView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-
-import java.io.File;
 import java.io.IOException;
 
-/** A basic Camera preview class */
 
+
+/**
+ * A basic Camera preview class
+ * Clase obtenida del tutorial para usar la cámara de Android:
+ * http://developer.android.com/intl/es/guide/topics/media/camera.html
+ * */
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder mHolder;

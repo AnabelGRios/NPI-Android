@@ -1,49 +1,51 @@
 package com.npi.appgestosfoto;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ImageFormat;
-import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.util.Size;
-import android.view.LayoutInflater;
-import android.view.Surface;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.TextureView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
+/*  This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    See <http://www.gnu.org/licenses/> for a copy of the GNU General
+    Public License.
+    Autores: Jacinto Carrasco Castillo, Anabel Gómez Ríos.
+    Fecha de la última modificación: 10/02/2016.
+ */
+
+/*
+ * Clase realizada siguiendo el tutorial de Android para el uso de la cámara:
+ *  http://developer.android.com/intl/es/guide/topics/media/camera.html
+ * Inicio de la cuenta atrás, implementado en el método setTimer(), basado en
+ * http://mobiledevtuts.com/android/android-sdk-how-to-make-an-automatic-snapshot-android-app/
+ */
+
+/*
+ * Clase para tomar una foto
+ */
 public class Foto extends AppCompatActivity {
 
-    private static final String TAG = "Foto";
-
+    // Camera que tomará la foto
     private Camera mCamera;
+
+    // Vista previa donde mostramos la imagen que tomaríamos en cada momento
     private CameraPreview mPreview;
 
-    public static final int MEDIA_TYPE_IMAGE = 1;
-
+    // Método para guardar la imagen tomada
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
@@ -52,6 +54,8 @@ public class Foto extends AppCompatActivity {
                 Bitmap userImage = BitmapFactory.decodeByteArray(data, 0, data.length);
                 FileOutputStream out = new FileOutputStream(destination);
                 userImage.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                Toast.makeText(Foto.this, R.string.picture_taken, Toast.LENGTH_SHORT).show();
+                finish();
             }
             catch(FileNotFoundException e){
                 e.printStackTrace();
@@ -60,37 +64,46 @@ public class Foto extends AppCompatActivity {
     };
 
 
+    // Creación de una instancia de la clase
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foto);
 
+        // Obtención de la instancia de la cámara
         mCamera = getCameraInstance();
 
-        // Create our Preview view and set it as the content of our activity.
+        // Creación de la vista previa de la cámara y puesta como el contenido de la Activity
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         preview.addView(mPreview);
 
+        // Giramos la cámara
         mCamera.setDisplayOrientation(90);
 
+        // Iniciamos la cuenta atrás
         startTimer();
     }
 
-    /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance() {
+    // Obtención de una instancia de la cámara
+    public Camera getCameraInstance() {
         Camera c = null;
         try {
-            c = Camera.open(); // attempt to get a Camera instance
+            // Intentamos obtener la cámara
+            c = Camera.open();
         } catch (Exception e) {
-            // Camera is not available (in use or does not exist)
+            // Camera no está disponible (está en uso o no existe)
+            Toast.makeText(this, R.string.cam_not_available_msg, Toast.LENGTH_SHORT).show();
+            finish();
         }
-        return c; // returns null if camera is unavailable
+        return c;
     }
 
 
+    // Inicio de la cuenta atrás
     public void startTimer() {
         new CountDownTimer(3000,1000) {
+            // Cuando pasan tres segundos, se toma la foto
             @Override
             public void onFinish() {
                 mCamera.takePicture(null, null, mPicture);
@@ -100,35 +113,5 @@ public class Foto extends AppCompatActivity {
             public void onTick(long msUntilFinished){
             }
         }.start();
-    }
-
-    private static File getOutputMediaFile(int type){
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "MyCameraApp");
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        // Create the storage directory if it does not exist
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-                Log.d("MyCameraApp", "failed to create directory");
-                return null;
-            }
-        }
-
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile;
-        if (type == MEDIA_TYPE_IMAGE) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "IMG_" + timeStamp + ".jpg");
-        } else {
-            return null;
-        }
-
-        return mediaFile;
     }
 }

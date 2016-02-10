@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">appGestosFoto</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_foto">Foto</string>
+    <string name="cam_not_available_msg">No se ha podido obtener la cámara</string>
+    <string name="picture_taken">Se ha tomado la foto y guardado en "/Pictures"</string>
+</resources>
