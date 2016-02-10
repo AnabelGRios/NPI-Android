@@ -3,4 +3,12 @@
     <string name="action_settings">Settings</string>
     <string name="grados">Introduzca un mensaje</string>
     <string name="title_activity_brujula">Brujula</string>
+    <string name="mensaje_hablar">Pulsa el botón para hablar</string>
+    <string name="no_ASR">ASR no es soportado en dispositivos virtuales</string>
+    <string name="norte">norte</string>
+    <string name="sur">sur</string>
+    <string name="este">este</string>
+    <string name="oeste">oeste</string>
+    <string name="error_entrada">La entrada debe ser de la forma: "Punto Cardinal" "tolerancia"</string>
+    <string name="successful_msg">ENHORABUENA, LO HAS CONSEGUIDO</string>
 </resources>

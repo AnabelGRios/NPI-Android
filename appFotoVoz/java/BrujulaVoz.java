@@ -29,6 +29,10 @@ import java.util.ArrayList;
     Fecha de la última modificación: 10/02/2016.
  */
 
+/* Los métodos listen(), setSpeekButton() y parte de onActivityResult() están obtenidos del material
+   facilitado por Zoraida Callejas bajo licencia GNU versión 3.
+ */
+
 /* Esta clase se encarga de la primera pantalla visible de la aplicación, en la que aparece el botón
    que permite el reconocimiento de voz al pulsarlo, busca una coincidencia en lo reconocido que tenga
    el formato "punto_cardinal tolerancia", donde punto_cardinal será norte, sur, oeste o este y tolerancia
@@ -82,7 +86,7 @@ public class BrujulaVoz extends AppCompatActivity{
              @Override
              public void onClick(View v) {
                  if ("generic".equals(Build.BRAND.toLowerCase())) {
-                     Toast toast = Toast.makeText(getApplicationContext(), "ASR no es soportado en dispositivos virtuales", Toast.LENGTH_SHORT);
+                     Toast toast = Toast.makeText(getApplicationContext(), R.string.no_ASR, Toast.LENGTH_SHORT);
                      toast.show();
                      Log.d(LOGTAG, "Intento de ASR en un dispositivo virtual");
                  } else {
@@ -138,10 +142,10 @@ public class BrujulaVoz extends AppCompatActivity{
                         tolerance = -1;
                     }
                     finally {
-                        if ((cardinal_point.equals("norte") ||
-                                cardinal_point.equals("sur") ||
-                                cardinal_point.equals("este") ||
-                                cardinal_point.equals("oeste")) && tolerance != -1) {
+                        if ((cardinal_point.equals(R.string.norte) ||
+                                cardinal_point.equals(R.string.sur) ||
+                                cardinal_point.equals(R.string.este) ||
+                                cardinal_point.equals(R.string.oeste)) && tolerance != -1) {
                             found = true;
                         }
                         else {
@@ -156,7 +160,7 @@ public class BrujulaVoz extends AppCompatActivity{
 
         // Si no encontramos ninguno con ese formato, indicamos cuál debe ser el formato.
         if( !found ){
-            message_error.setText("La entrada debe ser de la forma: \"Punto Cardinal\" \"tolerancia\" ");
+            message_error.setText(R.string.error_entrada);
         }
         // Si lo encontramos, llamamos al método que le pasa el punto cardinal y la tolerancia
         // a la clase "Brujula.java".

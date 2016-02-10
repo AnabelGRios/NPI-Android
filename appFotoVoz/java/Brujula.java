@@ -29,6 +29,12 @@ import android.widget.TextView;
     Fecha de la última modificación: 10/02/2016.
  */
 
+/* Lo relativo a sensores está obtenido de las guías de la API de Android Developers:
+   http://developer.android.com/intl/es/guide/topics/sensors/sensors_motion.html
+   http://developer.android.com/intl/es/guide/topics/sensors/sensors_overview.html y
+   http://developer.android.com/intl/es/reference/android/hardware/SensorManager.html
+ */
+
 /* Esta clase es la responsable de orientar al usuario: mostrar la brújula y animarla, indicando en un mensaje
    cómo tiene que orientarse (que será lo escuchado en la clase BrujulaVoz.java) e indicando con un
    mensaje en pantalla que ya lo ha hecho cuando lo consiga.
@@ -88,13 +94,13 @@ public class Brujula extends AppCompatActivity implements SensorEventListener {
         String cardinal_point = b.getString("Point");
         tolerance = b.getFloat("Tolerance");
 
-        if(cardinal_point.equals("norte"))
+        if(cardinal_point.equals(R.string.norte))
             objective = 0f;
-        else if (cardinal_point.equals("sur"))
+        else if (cardinal_point.equals(R.string.sur))
             objective = 180f;
-        else if (cardinal_point.equals("oeste"))
+        else if (cardinal_point.equals(R.string.oeste))
             objective = -90f;
-        else if (cardinal_point.equals("este"))
+        else if (cardinal_point.equals(R.string.este))
             objective = 90f;
 
         // Mostramos por pantalla el objetivo al que le vamos a llevar y con qué tolerancia
@@ -181,7 +187,7 @@ public class Brujula extends AppCompatActivity implements SensorEventListener {
         if( Math.abs( new_degree - objective) < tolerance ||
                 ( objective == 180f && Math.abs( objective + new_degree ) < tolerance )    ){
 
-            message.setText("ENHORABUENA, LO HAS CONSEGUIDO");
+            message.setText(R.string.successful_msg);
         }
         else{
             message.setText(" ");

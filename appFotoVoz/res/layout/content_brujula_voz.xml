@@ -18,7 +18,7 @@
         android:id="@+id/speech_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pulsa el botón para hablar"
+        android:text="@string/mensaje_hablar"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
