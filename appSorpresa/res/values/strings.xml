@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">appSorpresa</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_player">Player</string>
+    <string name="title_activity_admin">Admin</string>
+    <string name="password">password</string>
+    <string name="enter">ENTER</string>
+    <string name="omit">OMIT</string>
+    <string name="coded_msg">Mensaje codificado</string>
+    <string name="enter_text_msg">Introduzca el texto a codificar</string>
+    <string name="text_decoded_msg">Aparecerá el Texto Decodifi    cado</string>
+    <string name="nfc_not_found_msg">NFC no encontrado</string>
+    <string name="establish_conn_msg">Establecer conexión</string>
+    <string name="exception_coding_msg">Excepción codificando</string>
+    <string name="exception_decoding_msg">Excepción decodificando</string>
+    <string name="waiting_msg">Esperando un mensaje codificado</string>
+</resources>

@@ -23,7 +23,7 @@ import org.w3c.dom.Text;
 public class Player extends AppCompatActivity implements
         NfcAdapter.CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback{
 
-    // TextViews donde se mostrarán el texto recibido decodificado y el texto codificado que mandaremos
+    // TextViews donde se mostrarán el texto recibido decodificado
     private TextView textReceived;
 
     // Dispositivo NFC
@@ -32,6 +32,7 @@ public class Player extends AppCompatActivity implements
     // Mensaje codificado que mandaremos.
     private String coded_string;
 
+    // Boolean para saber si el usuario se ha registrado o no como Admin
     boolean is_registered = true;
 
     @Override
@@ -39,13 +40,16 @@ public class Player extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
+        // Instanciación el TextView donde recibiremos el mensaje codificado
         textReceived= (TextView)findViewById(R.id.coded_text);
+
+        // Instanciación del adaptador NFC
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if(nfcAdapter==null){
-            Toast.makeText(Player.this,"NFC no encontrado",Toast.LENGTH_LONG).show();
+            Toast.makeText(Player.this,R.string.nfc_not_found_msg,Toast.LENGTH_LONG).show();
         }
         else{
-            Toast.makeText(Player.this,"Establecer conexión",Toast.LENGTH_LONG).show();
+            Toast.makeText(Player.this,R.string.establish_conn_msg,Toast.LENGTH_LONG).show();
             nfcAdapter.setNdefPushMessageCallback(this, this);
             nfcAdapter.setOnNdefPushCompleteCallback(this, this);
         }
@@ -54,7 +58,6 @@ public class Player extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-
 
         // Obtenemos el Intent que ha activado a la aplicación
         Intent intent = getIntent();

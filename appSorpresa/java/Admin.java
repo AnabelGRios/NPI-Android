@@ -25,35 +25,60 @@ import org.w3c.dom.Text;
 public class Admin extends AppCompatActivity implements View.OnClickListener,
         NfcAdapter.CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback {
 
-    private TextView textReceived;
-    private TextView codedText;
-    private NfcAdapter nfcAdapter;
-    private boolean is_registered;
-    private String coded_string_received;
-    private String coded_string_sending;
+    // EditText donde escribiremos el mensaje a escribir
     private EditText editCodingText;
+
+    // TextViews donde se mostrarán el texto recibido decodificado
+    private TextView textReceived;
+
+    // TextViews donde se mostrarán el texto recibido codificado
+    private TextView codedText;
+
+    // Dispositivo NFC
+    private NfcAdapter nfcAdapter;
+
+    // Botón para codificar el mensaje escrito
     private Button codeBtn;
+
+    // String codificado recibido
+    private String coded_string_received;
+
+    // String codificado que enviaremos
+    private String coded_string_sending;
+
+    // Boolean para saber si el usuario se ha registrado o no como Admin
+    private boolean is_registered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
+
+        // Instanciamos el TextView para el texto codificado
         codedText = (TextView) findViewById(R.id.coded_text);
+
+        // Instanciamos el EditText donde escribiremos el texto a codificar
         editCodingText = (EditText) findViewById(R.id.editCodingText);
+
+        // Instanciamos el TextView donde escribiremos el texto decodificado
         textReceived = (TextView) findViewById(R.id.decoded_text);
+
+        // Instanciamos el botón para codificar
         codeBtn = (Button) findViewById(R.id.codeBtn);
         codeBtn.setOnClickListener(this);
 
+        // Instanciamos el Adaptador NFC
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if(nfcAdapter==null){
-            Toast.makeText(Admin.this, "NFC no encontrado", Toast.LENGTH_LONG).show();
+            Toast.makeText(Admin.this, R.string.nfc_not_found_msg, Toast.LENGTH_LONG).show();
         }
         else{
-            Toast.makeText(Admin.this,"Establecer conexión",Toast.LENGTH_LONG).show();
+            Toast.makeText(Admin.this, R.string.establish_conn_msg,Toast.LENGTH_LONG).show();
             nfcAdapter.setNdefPushMessageCallback(this, this);
             nfcAdapter.setOnNdefPushCompleteCallback(this, this);
         }
 
+        // Obtenemos si el objeto Admin ha sido creado por la clase Main introduciendo la contraseña
         Intent intent = getIntent();
         is_registered = intent.getBooleanExtra("Registered",false);
     }
@@ -118,19 +143,20 @@ public class Admin extends AppCompatActivity implements View.OnClickListener,
         return ndefMessageout;
     }
 
-
+    // Método para codificar un mensaje
     String code(String msg){
         String base64 = null;
         try {
-            byte[] data = msg.getBytes("UTF-8");//msg.getBytes("UTF-8");
+            byte[] data = msg.getBytes("UTF-8");
             base64 = Base64.encodeToString(data, Base64.DEFAULT);
         }
         catch (Exception e){
-            Toast.makeText(Admin.this,"Excepción codificando",Toast.LENGTH_LONG).show();
+            Toast.makeText(Admin.this,R.string.exception_coding_msg,Toast.LENGTH_LONG).show();
         }
         return base64;
     }
 
+    // Método para decodificar un mensaje
     String decode(String msg){
         String text = null;
         try{
@@ -138,16 +164,15 @@ public class Admin extends AppCompatActivity implements View.OnClickListener,
             text = new String(data, "UTF-8");
         }
         catch (Exception e){
-            Toast.makeText(Admin.this,"Excepción decodificando",Toast.LENGTH_LONG).show();
+            Toast.makeText(Admin.this, R.string.exception_decoding_msg, Toast.LENGTH_LONG).show();
         }
 
         return text;
     }
 
-
+    // Método para responder al evento Click
     @Override
     public void onClick(View v) {
-        //Se responde al evento click
         if(v.getId()==R.id.codeBtn){
             coded_string_sending = code(editCodingText.getText().toString());
             codedText.setText(coded_string_sending);
