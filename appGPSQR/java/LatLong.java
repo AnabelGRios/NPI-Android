@@ -18,6 +18,10 @@ import android.os.Parcelable;
     Autores: Jacinto Carrasco Castillo, Anabel Gómez Ríos.
     Fecha de la última modificación: 10/02/2016.
  */
+
+/* Clase que contiene las coordenadas de un punto implementando la interfaz Parcelable,
+   necesaria para pasar mediante un ArrayList de una Activity a otra
+ */
 public class LatLong implements Parcelable {
     Float lat;
     Float lng;
@@ -39,7 +43,6 @@ public class LatLong implements Parcelable {
     }
 
     public LatLong() {
-
     }
 
     @Override

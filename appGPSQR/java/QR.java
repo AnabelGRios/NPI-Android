@@ -2,24 +2,18 @@ package com.npi.appgpsqr;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /*  This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -37,16 +31,31 @@ import java.util.List;
     Fecha de la última modificación: 10/02/2016.
  */
 
+/*
+ * Clase que se encarga de la lectura de los códigos QR para pasar las coordenadas a
+ * la clase Map.
+ */
 public class QR extends AppCompatActivity implements View.OnClickListener{
 
+    // Botón para leer un nuevo código QR
     private Button scanBtn;
-    private Button navigationBtn;
-    private TextView formatTxt, contentTxt, coord_numbers;
 
+    // Botón para iniciar la navegación
+    private Button navigationBtn;
+
+    // TextView para mostrar el formato y contenido del código QR
+    private TextView formatTxt, contentTxt;
+
+    // TextView para mostrar el número de localizaciones leídas.
+    private TextView coord_numbers;
+
+    // Identificador del Bundle que pasaremos a la Activity Map
     public final static String EXTRA_BUNDLE = "com.npi.appgpsqr.BUNDLE";
 
+    // ArrayList de coordenadas que se pasarán a la Activity Map
     private ArrayList<LatLong> coordinates;
 
+    // Creación de la Activity
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -54,47 +63,27 @@ public class QR extends AppCompatActivity implements View.OnClickListener{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Se instancia el botón para leer un nuevo código
         scanBtn = (Button)findViewById(R.id.scan_button);
+        //Se instancia el botón para pasar a la navegación
         navigationBtn = (Button)findViewById(R.id.navigation_button);
-        //Se Instancia el Campo de Texto para el nombre del formato de código de barra
+        //Se instancia el Campo de Texto para el nombre del formato de código de barra
         formatTxt = (TextView)findViewById(R.id.scan_format);
-        //Se Instancia el Campo de Texto para el contenido  del código de barra
+        //Se instancia el Campo de Texto para el contenido  del código de barra
         contentTxt = (TextView)findViewById(R.id.scan_content);
-        //Se Instancia el Campo de Texto para el contenido  del número de coordenadas leídas
+        //Se instancia el Campo de Texto para el contenido  del número de coordenadas leídas
         coord_numbers = (TextView)findViewById(R.id.coord_numbers);
         //Se agrega la clase MainActivity.java como Listener del evento click del botón de Scan
         scanBtn.setOnClickListener(this);
         //Se agrega la clase MainActivity.java como Listener del evento click del botón de Navigate
         navigationBtn.setOnClickListener(this);
-
-        coordinates = new ArrayList<LatLong>();
+        //Se instancia el ArrayList de coordenadas.
+        coordinates = new ArrayList<>();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_qr, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
+    //Se responde al evento click en cada uno de los botones
     @Override
     public void onClick(View view) {
-        //Se responde al evento click
         if(view.getId()==R.id.scan_button){
             //Se instancia un objeto de la clase IntentIntegrator
             IntentIntegrator scanIntegrator = new IntentIntegrator(this);
@@ -107,14 +96,16 @@ public class QR extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
+    // Método para iniciar la navegación
     private void startNavigation(){
-
         Bundle b = new Bundle();
+
+        //Se añaden en un Bundle las coordenadas
         b.putParcelableArrayList("Coordinates", coordinates);
 
+        //Iniciamos la Activity del mapa
         Intent intent_map = new Intent(this, Map.class);
         intent_map.putExtra(EXTRA_BUNDLE, b);
-
         startActivity(intent_map);
     }
 
@@ -134,10 +125,10 @@ public class QR extends AppCompatActivity implements View.OnClickListener{
             //Quiere decir que se obtuvo resultado por lo tanto:
             //Desplegamos en pantalla el contenido del código de barra scaneado
             String scanContent = scanningResult.getContents();
-            contentTxt.setText("Contenido: " + scanContent);
+            contentTxt.setText(R.string.content + scanContent);
             //Desplegamos en pantalla el nombre del formato del código de barra scaneado
             String scanFormat = scanningResult.getFormatName();
-            formatTxt.setText("Formato: " + scanFormat);
+            formatTxt.setText(R.string.format  + scanFormat);
 
             if(scanContent != null){
                 String[] parts = scanContent.split("_");
@@ -146,7 +137,7 @@ public class QR extends AppCompatActivity implements View.OnClickListener{
         }else{
             //Quiere decir que NO se obtuvo resultado
             Toast toast = Toast.makeText(getApplicationContext(),
-                    "No se han recibido datos del scaneo", Toast.LENGTH_SHORT);
+                    R.string.no_qr_msg, Toast.LENGTH_SHORT);
             toast.show();
         }
     }

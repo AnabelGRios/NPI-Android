@@ -2,4 +2,15 @@
     <string name="app_name">appGPSQR</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_map">Map</string>
+    <string name="content">Contenido: </string>
+    <string name="format">Formato: </string>
+    <string name="no_qr_msg">No se han recibido datos del scaneo</string>
+    <string name="next_point_msg">Ha llegado al final del recorrido</string>
+    <string name="final_msg">Ha llegado al siguiente punto</string>
+    <string name="label_marker">Destino </string>
+    <string name="null_position_toast">Posición nula</string>
+    <string name="new_qr_button">NEW QR</string>
+    <string name="show_rute_button">SHOW RUTE </string>
+    <string name="hide_rute_button">HIDE RUTE </string>
+    <string name="navigate_button">NAVIGATE </string>
 </resources>
