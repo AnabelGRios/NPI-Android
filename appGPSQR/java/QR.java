@@ -31,6 +31,13 @@ import java.util.ArrayList;
     Fecha de la última modificación: 10/02/2016.
  */
 
+/* El lector de código QR está hecho siguiendo el tutorial presente en la página web
+   http://www.hablemosdeandroid.com/p/como-hacer-un-lector-de-codigos-con.html y
+   utilizando el proyecto ZXING https://github.com/zxing/zxing de cuya licencia se
+   encuentra una copia en la carpeta del proyecto. Cualquier cambio presente en este
+   proyecto es nuestro.
+ */
+
 /*
  * Clase que se encarga de la lectura de los códigos QR para pasar las coordenadas a
  * la clase Map.

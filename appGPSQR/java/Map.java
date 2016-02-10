@@ -25,9 +25,31 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+
+/*  This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    See <http://www.gnu.org/licenses/> for a copy of the GNU General
+    Public License.
+
+    Autores: Jacinto Carrasco Castillo, Anabel Gómez Ríos.
+    Fecha de la última modificación: 10/02/2016.
+ */
+
+/* Para utilizar los mapas hemos seguido en un principio el tutorial presente en
+   http://expocodetech.com/usar-google-maps-en-aplicaciones-android-mapa/ y le hemos
+   hecho las modificaciones necesarias para adaptarlo a nuestras necesidades.
+   El resto de información la hemos sacado de las guías de la API de android developers,
+   en concreto, como ir rastreando las posiciones del GPS:
+   http://developer.android.com/intl/es/training/location/retrieve-current.html#last-known
+ */
 
 /*
  * Clase para mostrar el mapa y realizar la navegación
