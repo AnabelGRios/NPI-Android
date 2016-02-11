@@ -8,10 +8,11 @@
     <string name="omit">OMIT</string>
     <string name="coded_msg">Mensaje codificado</string>
     <string name="enter_text_msg">Introduzca el texto a codificar</string>
-    <string name="text_decoded_msg">Aparecerá el Texto Decodifi    cado</string>
+    <string name="text_decoded_msg">Aparecerá el Texto Decodificado</string>
     <string name="nfc_not_found_msg">NFC no encontrado</string>
     <string name="establish_conn_msg">Establecer conexión</string>
     <string name="exception_coding_msg">Excepción codificando</string>
     <string name="exception_decoding_msg">Excepción decodificando</string>
     <string name="waiting_msg">Esperando un mensaje codificado</string>
+    <string name="code_btn">CODE</string>
 </resources>

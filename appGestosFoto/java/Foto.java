@@ -54,7 +54,7 @@ public class Foto extends AppCompatActivity {
                 Bitmap userImage = BitmapFactory.decodeByteArray(data, 0, data.length);
                 FileOutputStream out = new FileOutputStream(destination);
                 userImage.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                Toast.makeText(Foto.this, R.string.picture_taken, Toast.LENGTH_SHORT).show();
+                Toast.makeText(Foto.this,"Se ha tomado la foto y guardado en \"/Pictures\"", Toast.LENGTH_SHORT).show();
                 finish();
             }
             catch(FileNotFoundException e){

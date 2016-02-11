@@ -27,7 +27,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/omit"
+        android:text="@string/code_btn"
         android:id="@+id/codeBtn"
         android:layout_below="@+id/editCodingText"
         android:layout_centerHorizontal="true" />
