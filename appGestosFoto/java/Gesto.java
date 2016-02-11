@@ -47,6 +47,7 @@ public class Gesto extends AppCompatActivity implements OnGesturePerformedListen
 
         // Creamos la capa donde dibujaremos el gesto
         GestureOverlayView gestureOverlayView = new GestureOverlayView(this);
+        gestureOverlayView.setGestureStrokeType(GestureOverlayView.GESTURE_STROKE_TYPE_MULTIPLE);
         View inflate = getLayoutInflater().inflate(R.layout.activity_gesto,null);
         gestureOverlayView.addView(inflate);
 
@@ -71,9 +72,8 @@ public class Gesto extends AppCompatActivity implements OnGesturePerformedListen
     public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
         ArrayList<Prediction> predictions = gestureLib.recognize(gesture);
         for (Prediction prediction : predictions) {
-            if (prediction.score > 1.0) {
+            if (prediction.score > 6.5) {
                 Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
-
                 // Activamos la cámara si se ha dibujado la cámara
                 if(prediction.name.equals("camera")){
                     Intent intent = new Intent(this, Foto.class);

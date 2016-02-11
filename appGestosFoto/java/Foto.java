@@ -63,6 +63,17 @@ public class Foto extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onPause(){
+        super.onPause();
+        mCamera.release();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        mCamera.release();
+    }
 
     // Creación de una instancia de la clase
     @Override
