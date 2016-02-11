@@ -64,7 +64,6 @@ public class Gesto extends AppCompatActivity implements OnGesturePerformedListen
 
         // Hacemos visible la capa
         setContentView(gestureOverlayView);
-
     }
 
     //Reconocedor de gestos

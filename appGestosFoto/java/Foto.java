@@ -13,6 +13,8 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /*  This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -49,7 +51,8 @@ public class Foto extends AppCompatActivity {
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            File destination = new File(Environment.getExternalStorageDirectory() + "/Pictures", "mPicture.jpg");
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            File destination = new File(Environment.getExternalStorageDirectory() + "/Pictures", "pic" + timeStamp +".jpg");
             try{
                 Bitmap userImage = BitmapFactory.decodeByteArray(data, 0, data.length);
                 FileOutputStream out = new FileOutputStream(destination);
