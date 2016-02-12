@@ -116,6 +116,7 @@ public class QR extends AppCompatActivity implements View.OnClickListener{
         startActivity(intent_map);
     }
 
+    // Método para añadir la latitud y longitud al vector de coordenadas
     private void addLatLng(float lat, float lng){
         LatLong coord = new LatLong();
         coord.lat = lat;
@@ -125,15 +126,16 @@ public class QR extends AppCompatActivity implements View.OnClickListener{
         coord_numbers.setText(Integer.toString(coordinates.size()));
     }
 
+    // Método para recoger el resultado del escaneo de código QR
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         //Se obtiene el resultado del proceso de scaneo y se parsea
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        Toast.makeText(getApplicationContext(), "Escaneo en QR", Toast.LENGTH_SHORT).show();
         if (scanningResult != null) {
-            //Quiere decir que se obtuvo resultado por lo tanto:
-            //Desplegamos en pantalla el contenido del código de barra scaneado
+            //Mostramos por pantalla el contenido del código de barras escaneado
             String scanContent = scanningResult.getContents();
             contentTxt.setText(R.string.content + scanContent);
-            //Desplegamos en pantalla el nombre del formato del código de barra scaneado
+            //Mostramos por pantalla el formato del código de barras escaneado
             String scanFormat = scanningResult.getFormatName();
             formatTxt.setText(R.string.format  + scanFormat);
 
@@ -143,8 +145,7 @@ public class QR extends AppCompatActivity implements View.OnClickListener{
             }
         }else{
             //Quiere decir que NO se obtuvo resultado
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    R.string.no_qr_msg, Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getApplicationContext(), "No se han recibido datos del escaneo", Toast.LENGTH_SHORT);
             toast.show();
         }
     }

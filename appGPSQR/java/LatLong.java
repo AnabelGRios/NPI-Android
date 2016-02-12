@@ -45,6 +45,11 @@ public class LatLong implements Parcelable {
     public LatLong() {
     }
 
+    public LatLong(float lat, float lng) {
+        this.lat = lat;
+        this.lng = lng;
+    }
+
     @Override
     public int describeContents() {
         return 0;

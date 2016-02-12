@@ -24,8 +24,10 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
+
 
 /*  This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -109,7 +111,7 @@ public class Map extends AppCompatActivity
         //Obtención de las coordenadas
         Intent intent = getIntent();
         Bundle b = intent.getBundleExtra(QR.EXTRA_BUNDLE);
-        destinys = b.getParcelableArrayList("Coordinates");
+        destinys =  b.getParcelableArrayList("Coordinates");
 
         // Instanciación del ArrayList de Marker
         destiny_markers = new ArrayList<>();
@@ -133,11 +135,12 @@ public class Map extends AppCompatActivity
         show_rute_button.setClickable(false);
     }
 
+    // Método para establecer el próximo punto al que debemos llegar
     private void setDestiny(int destiny){
         float lat = destinys.get(destiny).lat;
         float lng = destinys.get(destiny).lng;
 
-        LatLng latlng = new LatLng(lat,lng);
+        LatLng latlng = new LatLng(lat, lng);
         setMarker(latlng, R.string.label_marker + Float.toString(destiny), Float.toString(lat), Float.toString(lng));
     }
 
@@ -251,20 +254,20 @@ public class Map extends AppCompatActivity
         if( Math.abs(mLastLocation.getLatitude()-destinys.get(actual_destiny).lat) < 0.0001 &&
                 Math.abs(mLastLocation.getLongitude()-destinys.get(actual_destiny).lng) < 0.0001){
 
+            // Cambiamos el color del Marker de la última localización visitada
+            destiny_markers.get(actual_destiny).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
             //Comprobamos si hemos llegado al último punto del recorrido
-            if(actual_destiny == destinys.size()-1){
+            if (actual_destiny == destinys.size() - 1) {
                 show_rute_button.setClickable(true);
-                Toast toast = Toast.makeText(getApplicationContext(), R.string.next_point_msg, Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), R.string.final_msg, Toast.LENGTH_SHORT);
                 toast.show();
             }
-            else{
-                // Cambiamos el color del Marker de la última localización visitada
-                destiny_markers.get(actual_destiny).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            else {
                 // Seguimos el recorrido avanzando al siguiente punto
                 actual_destiny++;
                 setDestiny(actual_destiny);
-                Toast toast = Toast.makeText(getApplicationContext(), R.string.final_msg, Toast.LENGTH_SHORT);
-                toast.show();
+                Toast.makeText(getApplicationContext(), R.string.next_point_msg, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -273,18 +276,49 @@ public class Map extends AppCompatActivity
     @Override
     public void onClick(View v) {
 
-        if(v.getId() == R.id.show_rute){
-            if(!polyline_drawn){
+        if (v.getId() == R.id.show_rute) {
+            if (!polyline_drawn) {
                 polyline = mMap.addPolyline(path_locations);
                 polyline_drawn = true;
                 show_rute_button.setText(R.string.hide_rute_button);
-            }
-            else {
+            } else {
                 polyline.remove();
                 polyline_drawn = false;
                 show_rute_button.setText(R.string.show_rute_button);
             }
         }
 
+        if (v.getId() == R.id.new_qr) {
+            //Se instancia un objeto de la clase IntentIntegrator
+            Toast.makeText(getApplicationContext(), "Botón en Map", Toast.LENGTH_SHORT).show();
+            IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+            //Se procede con el proceso de scaneo
+            scanIntegrator.initiateScan();
+        }
+    }
+
+    // Método para recoger el resultado del escaneo de código QR
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        //Se obtiene el resultado del proceso de scaneo y se parsea
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+
+        if (scanningResult != null) {
+            //Obtenemos el contenido y formato del escaneo
+            String scanContent = scanningResult.getContents();
+            String scanFormat = scanningResult.getFormatName();
+
+            if(scanContent != null){
+                String[] parts = scanContent.split("_");
+                LatLong lat_long = new LatLong();
+                lat_long.lat = Float.parseFloat(parts[1]);
+                lat_long.lat = Float.parseFloat(parts[3]);
+
+                destinys.add(new LatLong(Float.parseFloat(parts[1]),Float.parseFloat(parts[3])));
+            }
+        }else{
+            //Quiere decir que NO se obtuvo resultado
+            Toast toast = Toast.makeText(getApplicationContext(), "No se han recibido datos del escaneo", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 }
