@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -160,6 +161,9 @@ public class Movimiento extends AppCompatActivity implements SensorEventListener
         // girando a false.
         if (girando) {
             reproductorMaracas.start();
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    R.string.repr_maracas, Toast.LENGTH_SHORT);
+            toast.show();
             girando = false;
         }
 
@@ -167,6 +171,9 @@ public class Movimiento extends AppCompatActivity implements SensorEventListener
         // la variable hitting a false.
         if (hitting && gyr_X < 0.5 && gyr_Y < 0.5 && gyr_Z < 0.5){
             reproductor.start();
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    R.string.repr_tambor, Toast.LENGTH_SHORT);
+            toast.show();
             hitting = false;
         }
     }
