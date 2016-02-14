@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
+
 /*  This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License.
@@ -35,7 +37,8 @@ import org.w3c.dom.Text;
  **/
 
 /*
- * Clase que recoge un movimiento usando el acelerómetro y reproduce un sonido atendiendo a éste
+ * Clase que recoge un movimiento usando el acelerómetro y reproduce un sonido atendiendo a éste;
+ * y recoge la velocidad al girar el dispositivo y reproduce un sonido distinto al hacerlo.
  */
 public class Movimiento extends AppCompatActivity implements SensorEventListener{
 
@@ -43,22 +46,27 @@ public class Movimiento extends AppCompatActivity implements SensorEventListener
     private SensorManager mSensorManager;
 
     // Sensor con el que sabremos la aceleración que sufre el dispositivo
+    // y sensor con el que sabremos la velocidad angular (giroscopio).
     private Sensor mAccelerometer;
     private Sensor mGyroscope;
 
-    // Reproductor del sonido
+    // Reproductores del sonido
     private MediaPlayer reproductor;
     private MediaPlayer reproductorMaracas;
 
-    // boolean para saber si se está golpeando el tambor
+    // boolean para saber si se está golpeando el tambor o
+    // si se está girando el dispositivo para tocar las maracas
     private boolean hitting = false;
     private boolean girando = false;
 
-    // TextView donde se muestra la aceleración sufrida en el eje Z
+    // TextView donde se muestra la aceleración sufrida en el eje Z,
+    // la velocidad angular del eje Z y los mensajes fijos explicativos
     TextView gyr_Z_text;
     TextView accel_Z_text;
-    TextView prueba;
+    TextView msg_gyr, msg_accel;
 
+    // Variables en las que guardaremos los giros y aceleraciones en
+    // cada eje.
     float gyr_Z, accel_Z, accel_X, accel_Y, gyr_X, gyr_Y;
 
 
@@ -71,21 +79,27 @@ public class Movimiento extends AppCompatActivity implements SensorEventListener
         // Instanciación del SensorManager
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-        // Obtención del acelerómetro
+        // Obtención del acelerómetro y giroscopio
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        // Instanciación del reproductor
-        reproductor = MediaPlayer.create(this, R.raw.tomacoustic01);
 
+        // Creación de los reproductores
+        reproductor = MediaPlayer.create(this, R.raw.tomacoustic01);
         reproductorMaracas = MediaPlayer.create(this, R.raw.maracas);
 
-        // Instanciación del TextView
+        // Instanciación de los TextView
         gyr_Z_text = (TextView) findViewById(R.id.gyr_Z);
         accel_Z_text = (TextView) findViewById(R.id.accel_Z);
-        prueba = (TextView) findViewById(R.id.prueba);
+        msg_gyr = (TextView) findViewById(R.id.msg_gyr);
+        msg_accel = (TextView) findViewById(R.id.msg_accel);
+
+        // Ponemos los mensajes explicativos, que no variarán a lo largo
+        // de la ejecución de la aplicación.
+        msg_gyr.setText(R.string.message_gyr);
+        msg_accel.setText(R.string.message_accel);
     }
 
-    // Obtenemos el sensor cuando volvemos a la aplicación
+    // Obtenemos los sensores cuando volvemos a la aplicación
     @Override
     protected void onResume(){
         super.onResume();
@@ -101,58 +115,59 @@ public class Movimiento extends AppCompatActivity implements SensorEventListener
         if (reproductor.isPlaying()) {
             reproductor.pause();
             reproductorMaracas.pause();
-           // pausado = true;
         }
     }
 
-    // Manejamos el cambio en la aceleración lineal (sin contar la gravedad
+    // Manejamos el cambio en la aceleración lineal (sin contar la gravedad)
+    // y la velocidad angular que estén presentes en el dispositivo.
     @Override
     public void onSensorChanged(SensorEvent event) {
         switch (event.sensor.getType()){
             case Sensor.TYPE_GYROSCOPE:
-                // Obtenemos la aceleración en el eje Z
+                // Obtenemos la velocidad angular en todos los ejes
                 gyr_Z = event.values[2];
                 gyr_X = event.values[0];
                 gyr_Y = event.values[1];
+
+                // Mostramos por pantalla la velocidad angular del eje Z
                 gyr_Z_text.setText(Float.toString(gyr_Z));
             break;
 
             case Sensor.TYPE_LINEAR_ACCELERATION:
-                // Obtenemos la aceleración en el eje Z
+                // Obtenemos la aceleración en todos los ejes.
                 accel_Z = event.values[2];
                 accel_X = event.values[0];
                 accel_Y = event.values[1];
+
+                // Mostramos por pantalla la aceleración en el eje Z.
                 accel_Z_text.setText(Float.toString(accel_Z));
             break;
         }
 
-        if(gyr_Z < -2){
+        // Estaremos girando en el eje Z cuando la velocidad sea mayor que menos 5 (estemos girando hacia
+        // la derecha) y el giro registrado en los otros ejes sea menor que el registrado en el eje Z.
+        if(gyr_Z < -5 && Math.abs(gyr_Z) > Math.abs(gyr_X) && Math.abs(gyr_Z) > Math.abs(gyr_Y)){
             girando = true;
         }
 
-        if(accel_Z > 3){
+        // Estaremos moviendo el dispositivo en el eje Z cuando la aceleración sea mayor de 5 y la
+        // aceleración en el resto de los ejes sea menor que la aceleración en el eje Z.
+        if(accel_Z > 5 && accel_Z > accel_X && accel_Z >accel_Y){
             hitting = true;
         }
 
-        if (girando && gyr_Z < 0.5) {
-            if (gyr_X > gyr_Z || gyr_Z > gyr_Z) {
-                girando = false;
-            }
-            else {
-                reproductorMaracas.start();
-                girando = false;
-            }
+        // Si estamos girando, reproducimos el sonido y volvemos a poner la variable
+        // girando a false.
+        if (girando) {
+            reproductorMaracas.start();
+            girando = false;
         }
 
-        // Si paramos, habremos golpeado
-        if (hitting && accel_Z < 0.5){
-            if(accel_Y > accel_Z || accel_X > accel_Z){
-                hitting = false;
-            }
-            else {
-                reproductor.start();
-                hitting = false;
-            }
+        // Si estamos golpeando y no estamos girando, reproducimos el sonido y ponemos
+        // la variable hitting a false.
+        if (hitting && gyr_X < 0.5 && gyr_Y < 0.5 && gyr_Z < 0.5){
+            reproductor.start();
+            hitting = false;
         }
     }
 
@@ -160,6 +175,7 @@ public class Movimiento extends AppCompatActivity implements SensorEventListener
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    // Al dejar la aplicación, liberamos los reproductores y los ponemos a null.
     @Override
     public void onDestroy() {
         super.onDestroy();
