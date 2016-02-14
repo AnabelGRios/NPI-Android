@@ -5,11 +5,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 /*  This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,15 +44,23 @@ public class Movimiento extends AppCompatActivity implements SensorEventListener
 
     // Sensor con el que sabremos la aceleración que sufre el dispositivo
     private Sensor mAccelerometer;
+    private Sensor mGyroscope;
 
     // Reproductor del sonido
     private MediaPlayer reproductor;
+    private MediaPlayer reproductorMaracas;
 
     // boolean para saber si se está golpeando el tambor
     private boolean hitting = false;
+    private boolean girando = false;
 
     // TextView donde se muestra la aceleración sufrida en el eje Z
-    TextView acel_Z_text;
+    TextView gyr_Z_text;
+    TextView accel_Z_text;
+    TextView prueba;
+
+    float gyr_Z, accel_Z, accel_X, accel_Y, gyr_X, gyr_Y;
+
 
     // Creación de la Activity
     @Override
@@ -62,19 +73,24 @@ public class Movimiento extends AppCompatActivity implements SensorEventListener
 
         // Obtención del acelerómetro
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-
+        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         // Instanciación del reproductor
-        reproductor = new MediaPlayer();
+        reproductor = MediaPlayer.create(this, R.raw.tomacoustic01);
+
+        reproductorMaracas = MediaPlayer.create(this, R.raw.maracas);
 
         // Instanciación del TextView
-        acel_Z_text = (TextView) findViewById(R.id.acel_Z);
+        gyr_Z_text = (TextView) findViewById(R.id.gyr_Z);
+        accel_Z_text = (TextView) findViewById(R.id.accel_Z);
+        prueba = (TextView) findViewById(R.id.prueba);
     }
 
     // Obtenemos el sensor cuando volvemos a la aplicación
     @Override
     protected void onResume(){
         super.onResume();
-        mSensorManager.registerListener(this,mAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     // Liberamos el recurso cuando dejamos la aplicación
@@ -82,46 +98,75 @@ public class Movimiento extends AppCompatActivity implements SensorEventListener
     protected void onPause(){
         super.onPause();
         mSensorManager.unregisterListener(this);
+        if (reproductor.isPlaying()) {
+            reproductor.pause();
+            reproductorMaracas.pause();
+           // pausado = true;
+        }
     }
 
     // Manejamos el cambio en la aceleración lineal (sin contar la gravedad
     @Override
     public void onSensorChanged(SensorEvent event) {
         switch (event.sensor.getType()){
+            case Sensor.TYPE_GYROSCOPE:
+                // Obtenemos la aceleración en el eje Z
+                gyr_Z = event.values[2];
+                gyr_X = event.values[0];
+                gyr_Y = event.values[1];
+                gyr_Z_text.setText(Float.toString(gyr_Z));
+            break;
+
             case Sensor.TYPE_LINEAR_ACCELERATION:
                 // Obtenemos la aceleración en el eje Z
-                float aceleration_Z = event.values[2];
-                acel_Z_text.setText(Float.toString(aceleration_Z));
-
-                if(event.values[2] >3){
-                    hitting = true;
-                }
-                // Si paramos, habremos golpeado
-                else if (hitting && event.values[2] < 0.5){
-                    hitting = false;
-
-                    //Reproducimos el sonido
-                    try{
-                        AssetFileDescriptor afd = Movimiento.this.getResources().openRawResourceFd( R.raw.tomacoustic01 );
-                        reproductor.reset();
-
-                        reproductor.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getDeclaredLength());
-                        reproductor.prepare();
-
-                        reproductor.start();
-                    }
-                    catch (Exception e){
-                        Log.e("001","Excepción intentando reproducir sonido " + e.getMessage(),e);
-                    }
-                }
-                else {
-                    reproductor.stop();
-                }
+                accel_Z = event.values[2];
+                accel_X = event.values[0];
+                accel_Y = event.values[1];
+                accel_Z_text.setText(Float.toString(accel_Z));
             break;
+        }
+
+        if(gyr_Z < -2){
+            girando = true;
+        }
+
+        if(accel_Z > 3){
+            hitting = true;
+        }
+
+        if (girando && gyr_Z < 0.5) {
+            if (gyr_X > gyr_Z || gyr_Z > gyr_Z) {
+                girando = false;
+            }
+            else {
+                reproductorMaracas.start();
+                girando = false;
+            }
+        }
+
+        // Si paramos, habremos golpeado
+        if (hitting && accel_Z < 0.5){
+            if(accel_Y > accel_Z || accel_X > accel_Z){
+                hitting = false;
+            }
+            else {
+                reproductor.start();
+                hitting = false;
+            }
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        reproductor.release();
+        reproductor = null;
+        reproductorMaracas.release();
+        reproductorMaracas = null;
+    }
+
 }
