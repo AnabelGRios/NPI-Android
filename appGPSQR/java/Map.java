@@ -99,7 +99,7 @@ public class Map extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        // Create a GoogleApiClient instance
+        // Instanciación de la GoogleApiClient
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -191,7 +191,6 @@ public class Map extends AppCompatActivity
         destiny_markers.add(marker);
     }
 
-
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
@@ -227,8 +226,7 @@ public class Map extends AppCompatActivity
             mMap.animateCamera(cameraUpdate);
         }
         else {
-            Toast toast = Toast.makeText(getApplicationContext(), R.string.null_position_toast, Toast.LENGTH_SHORT);
-            toast.show();
+            Toast toast = Toast.makeText(getApplicationContext(), R.string.null_position_toast, Toast.LENGTH_SHORT);toast.show();
         }
 
         //Comenzamos la localización del usuario

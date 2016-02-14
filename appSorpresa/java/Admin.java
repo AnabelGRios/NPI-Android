@@ -145,7 +145,6 @@ public class Admin extends AppCompatActivity implements View.OnClickListener,
                 Toast.makeText(getApplicationContext(), eventString, Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
     // Método para crear el mensaje

@@ -123,14 +123,14 @@ public class QR extends AppCompatActivity implements View.OnClickListener{
         coord.lng = lng;
 
         coordinates.add(coord);
-        coord_numbers.setText(Integer.toString(coordinates.size()));
+        coord_numbers.setText("Se han leído " + Integer.toString(coordinates.size()) + " coordenadas");
     }
 
     // Método para recoger el resultado del escaneo de código QR
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         //Se obtiene el resultado del proceso de scaneo y se parsea
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        Toast.makeText(getApplicationContext(), "Escaneo en QR", Toast.LENGTH_SHORT).show();
+
         if (scanningResult != null) {
             //Mostramos por pantalla el contenido del código de barras escaneado
             String scanContent = scanningResult.getContents();
